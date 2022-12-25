@@ -102,7 +102,7 @@
   ansible.builtin.file:
     path: /usr/local/bin/docker-compose
     state: file
-    group: semaphore
+    group: docker
   become: true
   tags:
     - docker-compose

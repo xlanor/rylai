@@ -27,6 +27,6 @@
     - python3-docker
     - zsh
     - plocate
-    - nginx
+    - net-tools
     state: present
   become: true
