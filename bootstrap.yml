@@ -2,4 +2,5 @@
   user: jingkai
   roles:
     - common
+    - caddy
     - semaphore

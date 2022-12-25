@@ -1,0 +1,5 @@
+semaphore.kaolin.uk {
+    handle / {
+        reverse_proxy semapore:3000
+    }
+}

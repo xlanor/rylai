@@ -1,0 +1,71 @@
+- name: Create caddy group
+  group:
+    name: caddy
+    gid: 5001
+    state: present
+  become: True
+
+- name: Create caddy user
+  user:
+    uid: 5001
+    name: caddy
+    groups: 
+    - caddy
+    - docker
+    shell: /bin/bash
+    create_home: yes
+    append: yes
+    state: present
+  become: True
+
+- name: Set ssh key for caddy
+  authorized_key:
+    user: caddy
+    state: present
+    manage_dir: yes
+    key: "{{ lookup('file', 'files/jingkai_rsa.pub') }}"
+  become: True
+
+- name: Install docker-compose python package
+  remote_user: caddy
+  ansible.builtin.pip:
+    name: 
+    - docker
+    - docker-compose
+  
+- name: Prepare caddy folder
+  file:
+    path: /caddy
+    state: directory
+    group: caddy
+    owner: caddy
+  become: True
+
+- name: Prepare caddy folder (site)
+  file:
+    path: /caddy/site
+    state: directory
+    group: caddy
+    owner: caddy
+  become: True
+
+- name: Copy caddy-config
+  copy:
+    src: Caddyfile
+    dest: /caddy/Caddyfile
+    decrypt: yes
+    owner: caddy 
+    group: docker 
+    mode: 777
+    backup: no
+  remote_user: caddy
+
+- name: Copy caddy-compose yaml
+  copy:
+    src: caddy-compose.yaml
+    dest: /caddy/caddy-compose.yaml
+    owner: caddy 
+    group: docker 
+    mode: 777
+    backup: no
+  remote_user: caddy

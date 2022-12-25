@@ -1,0 +1,15 @@
+# use files parameter to use multiple docker-compose.yml files
+
+- name: Create caddy_data volume if not exist
+  docker_volume:
+    name: caddy_data
+    state: present
+  
+- name: Start caddy
+  remote_user: caddy
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+  community.docker.docker_compose:
+    project_src: /caddy
+    files:
+    - caddy-compose.yaml
