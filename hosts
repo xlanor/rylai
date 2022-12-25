@@ -1,0 +1,2 @@
+[nodes]
+mirror.jingk.ai      ansible_ssh_port=22225

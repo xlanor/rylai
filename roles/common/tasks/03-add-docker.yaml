@@ -1,0 +1,110 @@
+- name: Check if docker is installed
+  stat:
+    path: /usr/bin/docker
+  register: docker_result
+
+- name: Check if docker-compose is present
+  stat:
+    path: /usr/local/bin/docker-compose
+  register: docker_compose_result
+
+
+- name: Install docker packages
+  apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+  with_items:
+    - apt-transport-https
+    - ca-certificates
+    - curl
+    - software-properties-common
+  tags:
+    - docker
+  become: true
+  when: not docker_result.stat.exists
+
+- name: Add Dockers official GPG key
+  
+  apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present
+  tags:
+    - docker
+  become: true
+  when: not docker_result.stat.exists
+
+- name: Verify that we have the key with the fingerprint
+  
+  apt_key:
+    id: 0EBFCD88
+    state: present
+  tags:
+    - docker
+  become: true
+  when: not docker_result.stat.exists
+
+- name: Set up the stable repository
+  
+  apt_repository:
+    repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu jammy stable
+    state: present
+    update_cache: yes
+  tags:
+    - docker
+  become: true
+  when: not docker_result.stat.exists
+
+- name: Update apt packages
+  apt:
+    update_cache: yes
+  tags:
+    - docker
+  become: true
+
+- name: Install docker
+  apt:
+    name: 
+    - docker-ce
+    - docker-compose-plugin
+    - containerd.io
+    - docker-ce-cli
+    state: present
+    update_cache: yes
+  #notify: Start docker on boot
+  tags:
+    - docker
+  become: true
+  when: not docker_result.stat.exists
+
+- name: Add remote "jingkai" user to "docker" group
+  user:
+    name: "jingkai"
+    groups: 
+    - docker
+    append: yes
+  become: true
+  tags:
+    - docker
+  when: not docker_result.stat.exists
+
+- name: Install docker-compose from official github repo
+  get_url:
+    url : https://github.com/docker/compose/releases/download/1.29.2/docker-compose-Linux-x86_64
+    dest: /usr/local/bin/docker-compose
+    mode: 'u+x,g+x'
+  become: true
+  tags:
+    - docker-compose
+  when: not docker_compose_result.stat.exists
+
+- name: set relevant group on docker-compose to allow execution
+  ansible.builtin.file:
+    path: /usr/local/bin/docker-compose
+    state: file
+    group: semaphore
+  become: true
+  tags:
+    - docker-compose
+  when: not docker_compose_result.stat.exists
+

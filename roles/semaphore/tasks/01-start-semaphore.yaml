@@ -1,0 +1,9 @@
+# use files parameter to use multiple docker-compose.yml files
+- name: Start semaphore
+  remote_user: semaphore
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+  community.docker.docker_compose:
+    project_src: /semaphore
+    files:
+    - semaphore-compose.yaml

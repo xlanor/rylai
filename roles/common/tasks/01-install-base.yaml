@@ -1,0 +1,32 @@
+- name: Adds ppa for python3 latest
+  apt_repository:
+    validate_certs: no
+    repo: 'ppa:deadsnakes/ppa'
+    state: present
+  become: true
+- name: Update and upgrade apt packages
+  apt:
+    update_cache: yes
+    upgrade: 'yes'
+    cache_valid_time: 86400 
+  become: true
+- name: Install base packages
+  apt:
+    name:
+    - vim
+    - unzip
+    - git
+    - zsh
+    - tmux
+    - rsync
+    - ripgrep
+    - software-properties-common
+    - ca-certificates
+    - python3.12
+    - python3-pip
+    - python3-docker
+    - zsh
+    - plocate
+    - nginx
+    state: present
+  become: true

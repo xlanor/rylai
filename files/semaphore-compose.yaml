@@ -1,0 +1,24 @@
+version: '3'
+services:
+  postgres:
+    restart: unless-stopped
+    ports:
+      - 5432:5432
+    image: postgres:14
+    hostname: postgres
+    env_file:
+      - semaphore-postgres.env
+    volumes: 
+     - semaphore-postgres:/var/lib/postgresql/data
+
+  semaphore:
+    restart: unless-stopped
+    ports:
+      - 3000:3000
+    image: semaphoreui/semaphore:latest
+    env_file:
+      - semaphore.env
+    depends_on:
+      - postgres #change to postgres for postgres
+volumes:
+  semaphore-postgres: #switch to semaphore-postgres to use postgres

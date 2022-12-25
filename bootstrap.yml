@@ -1,0 +1,5 @@
+- hosts: all
+  user: jingkai
+  roles:
+    - common
+    - semaphore

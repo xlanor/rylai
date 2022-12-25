@@ -1,0 +1,3 @@
+files/semaphore-config.json
+files/semaphore-postgres.env
+secrets/
