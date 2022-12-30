@@ -1,4 +1,4 @@
-version: '3'
+version: '3.9'
 services:
   postgres:
     container_name: semaphore_postgres
@@ -8,7 +8,7 @@ services:
     image: postgres:14
     hostname: postgres
     env_file:
-      - semaphore-postgres.env
+      - /semaphore/semaphore-postgres.env
     volumes: 
      - semaphore-postgres:/var/lib/postgresql/data
 
@@ -19,8 +19,13 @@ services:
       - 3000:3000
     image: semaphoreui/semaphore:latest
     env_file:
-      - semaphore.env
+      - /semaphore/semaphore.env
     depends_on:
       - postgres #change to postgres for postgres
 volumes:
   semaphore-postgres: #switch to semaphore-postgres to use postgres
+
+networks:
+  default:
+    name: services
+    external: true

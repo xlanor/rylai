@@ -60,6 +60,17 @@
     backup: no
   remote_user: caddy
 
+- name: Copy caddy env
+  copy:
+    src: caddy.env
+    dest: /caddy/caddy.env
+    decrypt: yes
+    owner: caddy 
+    group: docker 
+    mode: 777
+    backup: no
+  remote_user: caddy
+
 - name: Copy caddy-compose yaml
   copy:
     src: caddy-compose.yaml

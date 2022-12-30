@@ -108,3 +108,7 @@
     - docker-compose
   when: not docker_compose_result.stat.exists
 
+- name: Create network for services
+  community.docker.docker_network:
+    attachable: true
+    name: services

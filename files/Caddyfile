@@ -1,5 +1,7 @@
 semaphore.kaolin.uk {
-    handle / {
-        reverse_proxy semapore:3000
+    reverse_proxy semaphore:3000
+    tls {
+        dns cloudflare {$CLOUDFLARE_API_TOKEN}
+        resolvers 1.1.1.1
     }
 }

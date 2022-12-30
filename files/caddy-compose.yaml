@@ -1,17 +1,19 @@
-version: "3.7"
+version: "3.9"
 
 services:
   caddy:
     container_name: caddy
-    image: caddy:2.6.2-alpine
+    image: ghcr.io/xlanor/mirror-caddy-base:1.0.0
     restart: unless-stopped
+    env_file:
+      - /caddy/caddy.env
     ports:
       - "80:80"
       - "443:443"
       - "443:443/udp"
     volumes:
-      - $PWD/Caddyfile:/etc/caddy/Caddyfile
-      - $PWD/site:/srv
+      - /caddy/Caddyfile:/etc/caddy/Caddyfile
+      - /caddy/site:/srv
       - caddy_data:/data
       - caddy_config:/config
 
@@ -19,3 +21,8 @@ volumes:
   caddy_data:
     external: true
   caddy_config:
+
+networks:
+  default:
+    name: services
+    external: true
